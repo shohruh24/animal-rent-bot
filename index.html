@@ -1,1 +1,64 @@
-
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animal Rent</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,sans-serif;background:#1a1a2e;color:#fff}
+        .header{background:#16213e;padding:20px;text-align:center;font-size:22px;font-weight:bold}
+        .animals{padding:15px;display:grid;gap:12px}
+        .card{background:#16213e;border-radius:15px;padding:18px;display:flex;align-items:center;gap:15px;cursor:pointer}
+        .card:active{transform:scale(0.97)}
+        .emoji{font-size:50px}
+        .info{flex:1}
+        .name{font-size:18px;font-weight:600}
+        .price{color:#f0a500;font-size:16px;font-weight:bold;margin:4px 0}
+        .desc{font-size:13px;color:#aaa}
+        .btn{background:#f0a500;color:#000;border:none;padding:16px;border-radius:12px;font-size:16px;font-weight:bold;cursor:pointer;width:100%;margin:8px 0}
+        .btn-green{background:#25D366;color:#fff}
+    </style>
+</head>
+<body>
+    <div class="header">🐾 Animal Rent</div>
+    <div class="animals" id="animals"></div>
+    <div style="padding:15px">
+        <button class="btn" onclick="bookNow()">📞 Забронировать</button>
+        <button class="btn btn-green" onclick="openBot()">💬 Написать в бот</button>
+    </div>
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.ready();
+        const animals = [
+            {id:'ot',emoji:'🐴',name:'Лошадь',price:'5 000 ₽ / час',desc:'Белая лошадь для фотосессий'},
+            {id:'quyon',emoji:'🐰',name:'Кролик',price:'1 500 ₽ / час',desc:'Декоративный кролик'},
+            {id:'ilon',emoji:'🐍',name:'Змея',price:'3 000 ₽ / час',desc:'Безопасная змея'},
+            {id:'kabutar',emoji:'🕊️',name:'Голубь',price:'1 000 ₽ / час',desc:'Белые голуби для свадеб'},
+            {id:'mushuk',emoji:'🐱',name:'Кошка',price:'2 000 ₽ / час',desc:'Породистая кошка'},
+            {id:'kuchuk',emoji:'🐕',name:'Собака',price:'2 500 ₽ / час',desc:'Дрессированная собака'},
+            {id:'maymun',emoji:'🐒',name:'Обезьяна',price:'4 000 ₽ / час',desc:'Ручная обезьяна'},
+            {id:'tulki',emoji:'🦊',name:'Лиса',price:'3 500 ₽ / час',desc:'Ручная лиса'}
+        ];
+        document.getElementById('animals').innerHTML = animals.map(a => `
+            <div class="card" onclick="select('${a.id}','${a.name}')">
+                <div class="emoji">${a.emoji}</div>
+                <div class="info">
+                    <div class="name">${a.name}</div>
+                    <div class="price">${a.price}</div>
+                    <div class="desc">${a.desc}</div>
+                </div>
+            </div>
+        `).join('');
+        function select(id, name){
+            tg.showPopup({title: name, message: 'Забронировать?', buttons: [{id:'yes', type:'default', text:'📅 Забронировать'},{id:'no', type:'cancel'}]}, function(btn){
+                if(btn==='yes'){ tg.sendData(JSON.stringify({action:'book', animal:id})); tg.close(); }
+            });
+        }
+        function bookNow(){ tg.sendData(JSON.stringify({action:'open_booking'})); tg.close(); }
+        function openBot(){ tg.openTelegramLink('https://t.me/ZooRent_bot'); }
+    </script>
+</body>
+</html>
