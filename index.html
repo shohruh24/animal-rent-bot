@@ -1,368 +1,168 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZooRent • Главная</title>
-    <style>
-        :root {
-            --bg: #f8f9fc;
-            --card: rgba(255,255,255,0.7);
-            --glass: rgba(255,255,255,0.5);
-            --text: #1a1a2e;
-            --sub: #7c7c9a;
-            --gold: #f0a500;
-            --green: #00c897;
-            --blue: #5b8def;
-            --orange: #ff7b54;
-            --pink: #ff6b9d;
-            --shadow: 0 8px 32px rgba(0,0,0,0.06);
-            --glow-gold: 0 0 20px rgba(240,165,0,0.3);
-            --radius: 20px;
-        }
+import 'package:flutter/material.dart';
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+void main() {
+  runApp(ZooRentApp());
+}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
-            background: linear-gradient(170deg, #f0f2ff 0%, #fdf2f8 30%, #f0fdf4 60%, #fefce8 100%);
-            background-attachment: fixed;
-            min-height: 100vh;
-            color: var(--text);
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-            -webkit-user-select: none;
-            padding-bottom: 100px;
-        }
+class ZooRentApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'ZooRent',
+      theme: ThemeData(
+        primaryColor: Colors.green,
+        fontFamily: 'Arial',
+      ),
+      home: HomeScreen(),
+    );
+  }
+}
 
-        /* АНИМАЦИИ */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(24px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.04); }
-        }
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
 
-        /* HEADER */
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 20px 10px;
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            background: rgba(255,255,255,0.6);
-        }
-        .logo {
-            font-size: 28px;
-            font-weight: 900;
-            letter-spacing: -1px;
-            background: linear-gradient(135deg, var(--green), #00a878);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .logo span { color: var(--gold); -webkit-text-fill-color: var(--gold); }
-        .search-btn {
-            width: 44px; height: 44px;
-            border-radius: 14px;
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.8);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-        }
-        .search-btn:active { transform: scale(0.93); background: #fff; }
+class _HomeScreenState extends State<HomeScreen> {
+  int _currentIndex = 0;
 
-        /* HERO */
-        .hero {
-            padding: 8px 20px 16px;
-            animation: fadeUp 0.6s ease;
-        }
-        .hero h2 {
-            font-size: 32px;
-            font-weight: 800;
-            letter-spacing: -1px;
-            line-height: 1.2;
-        }
-        .hero h2 .hl {
-            background: linear-gradient(135deg, var(--green), #00c89760);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shimmer 3s linear infinite;
-        }
-        .hero p {
-            color: var(--sub);
-            margin-top: 6px;
-            font-size: 15px;
-        }
+  final List<Map<String, dynamic>> pets = [
+    {
+      "name": "Golden Retriever",
+      "price": "60 000 so'm/soat",
+      "image": "https://images.unsplash.com/photo-1558788353-f76d92427f16"
+    },
+    {
+      "name": "British Cat",
+      "price": "50 000 so'm/soat",
+      "image": "https://images.unsplash.com/photo-1518791841217-8f162f1e1131"
+    },
+  ];
 
-        /* КАТЕГОРИИ */
-        .cats {
-            display: flex;
-            gap: 10px;
-            padding: 0 20px 6px;
-            overflow-x: auto;
-            scrollbar-width: none;
-        }
-        .cats::-webkit-scrollbar { display: none; }
-        .cat-card {
-            flex-shrink: 0;
-            width: 90px;
-            height: 110px;
-            border-radius: var(--radius);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-weight: 700;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
-            backdrop-filter: blur(10px);
-            border: 1.5px solid rgba(255,255,255,0.7);
-            animation: fadeUp 0.5s ease forwards;
-        }
-        .cat-card:nth-child(1) { background: rgba(0,200,151,0.12); }
-        .cat-card:nth-child(2) { background: rgba(91,141,239,0.12); }
-        .cat-card:nth-child(3) { background: rgba(255,123,84,0.12); }
-        .cat-card:nth-child(4) { background: rgba(255,107,157,0.12); }
-        .cat-card .ci { font-size: 36px; transition: transform 0.3s; }
-        .cat-card:active { transform: scale(0.94); box-shadow: var(--glow-gold); }
-        .cat-card:active .ci { transform: scale(1.2) rotate(-10deg); }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xfff5f7fb),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          "ZooRent",
+          style: TextStyle(
+            color: Colors.green,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
+        ),
+        actions: [
+          Icon(Icons.search, color: Colors.black),
+          SizedBox(width: 16),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            // Banner
+            Container(
+              height: 140,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                gradient: LinearGradient(
+                  colors: [Colors.green, Colors.lightGreen],
+                ),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        "Do'stingizni bugun ijaraga oling!",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(
+                      "https://images.unsplash.com/photo-1543466835-00a7907e9de1",
+                      width: 120,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                ],
+              ),
+            ),
 
-        /* ЗАГОЛОВОК */
-        .section-title {
-            padding: 18px 20px 10px;
-            font-size: 20px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
+            SizedBox(height: 20),
 
-        /* КАРТОЧКИ ЖИВОТНЫХ */
-        .pets {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            padding: 0 20px;
-        }
-        .pet-card {
-            background: var(--card);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: var(--radius);
-            padding: 14px;
-            cursor: pointer;
-            transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
-            border: 1.5px solid rgba(255,255,255,0.8);
-            box-shadow: var(--shadow);
-            animation: fadeUp 0.5s ease forwards;
-            position: relative;
-            overflow: hidden;
-        }
-        .pet-card:active {
-            transform: scale(0.95);
-            box-shadow: var(--glow-gold);
-            border-color: var(--gold);
-        }
-        .pet-card .img {
-            width: 100%;
-            height: 130px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 64px;
-            background: linear-gradient(135deg, rgba(0,200,151,0.08), rgba(91,141,239,0.08));
-            animation: float 3s ease-in-out infinite;
-            transition: transform 0.3s;
-        }
-        .pet-card:active .img { transform: scale(1.05); }
-        .pet-card .name {
-            font-weight: 700;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-        .pet-card .row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 6px;
-        }
-        .pet-card .price {
-            font-weight: 800;
-            font-size: 17px;
-            color: var(--green);
-        }
-        .pet-card .rating {
-            display: flex;
-            align-items: center;
-            gap: 3px;
-            font-size: 12px;
-            color: var(--gold);
-            font-weight: 700;
-        }
-        .pet-card .badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255,255,255,0.8);
-            backdrop-filter: blur(6px);
-            padding: 4px 9px;
-            border-radius: 10px;
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--text);
-        }
+            // Pet list
+            Expanded(
+              child: ListView.builder(
+                itemCount: pets.length,
+                itemBuilder: (context, index) {
+                  final pet = pets[index];
+                  return Container(
+                    margin: EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 10,
+                          offset: Offset(0, 5),
+                        )
+                      ],
+                    ),
+                    child: ListTile(
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.network(
+                          pet["image"],
+                          width: 60,
+                          height: 60,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      title: Text(
+                        pet["name"],
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(pet["price"]),
+                      trailing: Icon(Icons.favorite_border),
+                    ),
+                  );
+                },
+              ),
+            )
+          ],
+        ),
+      ),
 
-        /* КНОПКА */
-        .btn-rent {
-            display: block;
-            margin: 20px;
-            padding: 16px;
-            text-align: center;
-            border-radius: 16px;
-            background: linear-gradient(135deg, var(--green), #00a878);
-            color: #fff;
-            font-weight: 800;
-            font-size: 17px;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            transition: all 0.35s;
-            box-shadow: 0 8px 30px rgba(0,200,151,0.35);
-            border: none;
-            width: calc(100% - 40px);
-            animation: pulse 2.5s infinite;
-        }
-        .btn-rent:active {
-            transform: scale(0.95);
-            box-shadow: 0 4px 15px rgba(0,200,151,0.5);
-        }
-
-        /* НИЖНЯЯ НАВИГАЦИЯ */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 10px 24px;
-            background: rgba(255,255,255,0.7);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-top: 1px solid rgba(255,255,255,0.8);
-            z-index: 100;
-        }
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            font-size: 10px;
-            font-weight: 600;
-            color: var(--sub);
-            cursor: pointer;
-            transition: all 0.3s;
-            padding: 4px 12px;
-            border-radius: 12px;
-        }
-        .nav-item.active { color: var(--green); }
-        .nav-item.active::before {
-            content: '';
-            width: 20px; height: 3px;
-            background: var(--green);
-            border-radius: 3px;
-            margin-bottom: 2px;
-        }
-        .nav-icon { font-size: 22px; }
-    </style>
-</head>
-<body>
-
-    <!-- HEADER -->
-    <div class="header">
-        <div class="logo">Zoo<span>Rent</span></div>
-        <div class="search-btn">🔍</div>
-    </div>
-
-    <!-- HERO -->
-    <div class="hero">
-        <h2>Найди <span class="hl">питомца</span><br>для ярких моментов</h2>
-        <p>Аренда животных для фотосессий и праздников</p>
-    </div>
-
-    <!-- КАТЕГОРИИ -->
-    <div class="cats">
-        <div class="cat-card"><div class="ci">🐕</div>Собаки</div>
-        <div class="cat-card"><div class="ci">🐱</div>Кошки</div>
-        <div class="cat-card"><div class="ci">🦊</div>Экзотика</div>
-        <div class="cat-card"><div class="ci">🐴</div>Ферма</div>
-    </div>
-
-    <!-- ПОПУЛЯРНЫЕ -->
-    <div class="section-title">🔥 Популярные</div>
-    <div class="pets">
-        <div class="pet-card">
-            <div class="badge">⭐ 4.9</div>
-            <div class="img">🐴</div>
-            <div class="name">Белая лошадь</div>
-            <div class="row"><div class="price">5 000 ₽/ч</div><div class="rating">★ 4.9</div></div>
-        </div>
-        <div class="pet-card">
-            <div class="badge">🔥 Хит</div>
-            <div class="img">🐕</div>
-            <div class="name">Хаски</div>
-            <div class="row"><div class="price">2 500 ₽/ч</div><div class="rating">★ 4.8</div></div>
-        </div>
-        <div class="pet-card">
-            <div class="badge">🆕</div>
-            <div class="img">🦊</div>
-            <div class="name">Лиса</div>
-            <div class="row"><div class="price">3 500 ₽/ч</div><div class="rating">★ 4.7</div></div>
-        </div>
-        <div class="pet-card">
-            <div class="badge">✅</div>
-            <div class="img">🐒</div>
-            <div class="name">Обезьяна</div>
-            <div class="row"><div class="price">4 000 ₽/ч</div><div class="rating">★ 4.9</div></div>
-        </div>
-    </div>
-
-    <!-- КНОПКА -->
-    <button class="btn-rent" onclick="rentNow()">🚀 Арендовать сейчас</button>
-
-    <!-- НИЖНЯЯ НАВИГАЦИЯ -->
-    <div class="bottom-nav">
-        <div class="nav-item active"><div class="nav-icon">🏠</div>Главная</div>
-        <div class="nav-item"><div class="nav-icon">🦊</div>Категории</div>
-        <div class="nav-item"><div class="nav-icon">❤️</div>Избранное</div>
-        <div class="nav-item"><div class="nav-icon">👤</div>Профиль</div>
-    </div>
-
-    <script>
-        const tg = window.Telegram ? window.Telegram.WebApp : null;
-        if (tg) { tg.expand(); tg.ready(); tg.setHeaderColor('#f8f9fc'); tg.setBackgroundColor('#f8f9fc'); }
-        function rentNow() {
-            if (tg) { tg.sendData(JSON.stringify({action:'open_booking'})); tg.close(); }
-            else { alert('Откройте в Telegram!'); }
-        }
-    </script>
-
-</body>
-</html>
+      // Bottom Nav
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        selectedItemColor: Colors.green,
+        unselectedItemColor: Colors.grey,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.category), label: "Categories"),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: "Favorites"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+        ],
+      ),
+    );
+  }
+}
