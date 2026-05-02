@@ -1,168 +1,59 @@
-import 'package:flutter/material.dart';
+// ZooRent React Native (Expo) App // Run with: npx expo start
 
-void main() {
-  runApp(ZooRentApp());
-}
+import React, { useState } from "react"; import { View, Text, Image, FlatList, TouchableOpacity, StyleSheet } from "react-native"; import { Ionicons } from "@expo/vector-icons"; import { LinearGradient } from "expo-linear-gradient";
 
-class ZooRentApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'ZooRent',
-      theme: ThemeData(
-        primaryColor: Colors.green,
-        fontFamily: 'Arial',
-      ),
-      home: HomeScreen(),
-    );
-  }
-}
+const pets = [ { id: "1", name: "Buddy", type: "Golden Retriever", price: 12, rating: 4.8, img: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=800", }, { id: "2", name: "Luna", type: "British Shorthair", price: 8, rating: 4.9, img: "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=800", }, { id: "3", name: "Charlie", type: "Corgi", price: 10, rating: 4.7, img: "https://images.unsplash.com/photo-1558788353-f76d92427f16?w=800", }, ];
 
-class HomeScreen extends StatefulWidget {
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
+export default function App() { const [tab, setTab] = useState("home");
 
-class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0;
+const renderPet = ({ item }) => ( <LinearGradient colors={["rgba(255,255,255,0.15)", "rgba(255,255,255,0.05)"]} style={styles.card} > <Image source={{ uri: item.img }} style={styles.image} /> <View style={styles.cardBody}> <View style={styles.rowBetween}> <View> <Text style={styles.name}>{item.name}</Text> <Text style={styles.type}>{item.type}</Text> </View> <Ionicons name="heart-outline" size={22} color="#ff6b81" /> </View>
 
-  final List<Map<String, dynamic>> pets = [
-    {
-      "name": "Golden Retriever",
-      "price": "60 000 so'm/soat",
-      "image": "https://images.unsplash.com/photo-1558788353-f76d92427f16"
-    },
-    {
-      "name": "British Cat",
-      "price": "50 000 so'm/soat",
-      "image": "https://images.unsplash.com/photo-1518791841217-8f162f1e1131"
-    },
-  ];
+<View style={styles.rowBetween}>
+      <Text style={styles.meta}>⭐ {item.rating}</Text>
+      <Text style={styles.price}>${item.price}/hr</Text>
+    </View>
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xfff5f7fb),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Text(
-          "ZooRent",
-          style: TextStyle(
-            color: Colors.green,
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
-          ),
-        ),
-        actions: [
-          Icon(Icons.search, color: Colors.black),
-          SizedBox(width: 16),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            // Banner
-            Container(
-              height: 140,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                gradient: LinearGradient(
-                  colors: [Colors.green, Colors.lightGreen],
-                ),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Text(
-                        "Do'stingizni bugun ijaraga oling!",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.network(
-                      "https://images.unsplash.com/photo-1543466835-00a7907e9de1",
-                      width: 120,
-                      fit: BoxFit.cover,
-                    ),
-                  )
-                ],
-              ),
-            ),
+    <TouchableOpacity style={styles.button}>
+      <Text style={styles.buttonText}>Rent Now</Text>
+    </TouchableOpacity>
+  </View>
+</LinearGradient>
 
-            SizedBox(height: 20),
+);
 
-            // Pet list
-            Expanded(
-              child: ListView.builder(
-                itemCount: pets.length,
-                itemBuilder: (context, index) {
-                  final pet = pets[index];
-                  return Container(
-                    margin: EdgeInsets.only(bottom: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 10,
-                          offset: Offset(0, 5),
-                        )
-                      ],
-                    ),
-                    child: ListTile(
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.network(
-                          pet["image"],
-                          width: 60,
-                          height: 60,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      title: Text(
-                        pet["name"],
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(pet["price"]),
-                      trailing: Icon(Icons.favorite_border),
-                    ),
-                  );
-                },
-              ),
-            )
-          ],
-        ),
-      ),
+return ( <LinearGradient colors={["#0f0c29", "#302b63", "#24243e"]} style={styles.container}> {/* Header */} <View style={styles.header}> <View> <Text style={styles.title}>ZooRent</Text> <Text style={styles.subtitle}>Rent a pet, feel joy</Text> </View> <Ionicons name="person-circle" size={40} color="white" /> </View>
 
-      // Bottom Nav
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        selectedItemColor: Colors.green,
-        unselectedItemColor: Colors.grey,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.category), label: "Categories"),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: "Favorites"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-        ],
-      ),
-    );
-  }
-}
+{/* Pets */}
+  <FlatList
+    data={pets}
+    renderItem={renderPet}
+    keyExtractor={(item) => item.id}
+    contentContainerStyle={{ paddingBottom: 100 }}
+  />
+
+  {/* Bottom Nav */}
+  <View style={styles.bottomNav}>
+    {[
+      ["home", "home"],
+      ["grid", "categories"],
+      ["heart", "favorites"],
+      ["person", "profile"],
+    ].map(([icon, name]) => (
+      <TouchableOpacity key={name} onPress={() => setTab(name)}>
+        <Ionicons name={icon} size={24} color={tab === name ? "#a78bfa" : "white"} />
+      </TouchableOpacity>
+    ))}
+  </View>
+</LinearGradient>
+
+); }
+
+const styles = StyleSheet.create({ container: { flex: 1, padding: 16 }, header: { flexDirection: "row", justifyContent: "space-between", marginTop: 40 }, title: { fontSize: 28, fontWeight: "bold", color: "white" }, subtitle: { color: "#ccc" },
+
+card: { borderRadius: 20, marginTop: 15, overflow: "hidden", }, image: { height: 180, width: "100%" }, cardBody: { padding: 12 }, name: { fontSize: 18, fontWeight: "bold", color: "white" }, type: { color: "#ccc" },
+
+rowBetween: { flexDirection: "row", justifyContent: "space-between", marginTop: 8 }, meta: { color: "white" }, price: { color: "#a78bfa", fontWeight: "bold" },
+
+button: { marginTop: 10, backgroundColor: "#7c3aed", padding: 10, borderRadius: 12, alignItems: "center", }, buttonText: { color: "white", fontWeight: "bold" },
+
+bottomNav: { position: "absolute", bottom: 20, left: 20, right: 20, flexDirection: "row", justifyContent: "space-around", backgroundColor: "rgba(255,255,255,0.1)", padding: 12, borderRadius: 20, }, });
